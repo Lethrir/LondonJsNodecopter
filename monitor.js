@@ -50,27 +50,6 @@ app.get('/land', function(){
 	client.land();
 });
 
-var dc = 0;
-
-app.get('/data', function(req, res){
-	dc++;
-	console.log('called data ' + dc + ' times');
-	var series1 = [];
-	var series2 = [];
-	var series3 = [];
-	var result = [series1, series2, series3];
-	for(var i = 0; i < data.length; i++){
-		series1.push([i, data[i].x]);
-		series2.push([i, data[i].y]);
-		series3.push([i, data[i].z]);
-	}
-	data = [];
-	res.set({
-		'Content-Type': 'text/json'
-	});
-	res.send(result);
-});
-
 app.use(express.static(__dirname + '/public'));
 
 app.listen(3000);
