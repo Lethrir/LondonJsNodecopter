@@ -1,0 +1,40 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<div id="placeholder" style="width:600px;height:300px"></div>
+		<button onclick='launch()'>Launch</button>
+		<button onclick='land()'>Land</button>
+		<script src="jquery.js"></script>
+		<script src="jquery.flot.js"></script>
+		<script>
+			var plotData = [{data:[],label:'x'},{data:[],label:'y'},{data:[],label:'z'}];
+			function launch(){
+				$.get('/launch');
+			}
+
+			function land(){
+				$.get('/land');
+			}
+
+			var ws = new WebSocket('ws://localhost:8080');
+			
+			ws.onopen=function(){
+				//alert('connected');
+			};
+			ws.onerror=function(e){alert('error' + e);};
+			ws.onmessage = function(event) {
+				console.log(event.data);
+    			var res = JSON.parse(event.data);
+
+    			var i = plotData[0].data.length;
+    			plotData[0].data.push([i, res.x]);
+    			plotData[1].data.push([i, res.y]);
+    			plotData[2].data.push([i, res.z]);
+    			
+    			$.plot($("#placeholder"), plotData, { yaxis: { min:-200, max: 200 } });
+    		};
+
+		</script>
+	</body>
+</html>
